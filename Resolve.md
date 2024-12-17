@@ -20,13 +20,31 @@ gpg --batch --generate-key
 ```
 gpg --keyring ./petyapubring.kbx --no-default-keyring --list-keys
 ```
+Вывод:
+```
+./petyapubring.kbx
+-----------------
+pub   rsa3072 2019-10-27 [SCEA] [expires: 2019-11-26]
+      120C528F1D136BCF7AAACEE6D6BA055613B064D7
+uid           [ unknown] Petya <petya@somewhere.com>
+sub   rsa3072 2019-10-27 [SEA] [expires: 2019-11-26]
+```
+
 Индикатор pub указывает на открытый ключ.
 
 Аналогичным образом мы можем просмотреть запись закрытого ключа:
 ```
 gpg --keyring ./petyapubring.kbx --no-default-keyring --list-secret-keys
 ```
-
+Вывод:
+```
+./petyapubring.kbx
+-----------------
+sec   rsa3072 2019-10-27 [SCEA] [expires: 2019-11-26]
+      120C528F1D136BCF7AAACEE6D6BA055613B064D7
+uid           [ultimate] Petya <petya@somewhere.com>
+ssb   rsa3072 2019-10-27 [SEA] [expires: 2019-11-26]
+```
 Здесь sec указывает, что это секретный ключ.
 
 4. После успешной генерации ключа Петя может экспортировать открытый ключ из своей связки ключей в файл:
@@ -38,6 +56,14 @@ gpg --keyring ./petyapubring.kbx --no-default-keyring --armor --output petyapubk
 Посмотрим на содержание этого файла:
 ```
 cat petyapubkey.gpg
+```
+Вывод:
+```
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+mQGNBF21KQoBDACs7bgjl22TPyQDKjLTMlZrBgQrXZOIkNcH3z1f87XQYoLjVPU3
+ymg1hweHm1RsIxO+GdD42pkU/ob5YdWgvVBRdIZPeTXciTa8TtxZKNNtr+IL0pwY
+...
+-----END PGP PUBLIC KEY BLOCK-----
 ```
 
 5. Теперь Петя может поделиться этим файлом с Ваней по защищенным или незащищенным каналам. В нашем случае сделаем простую копию файла для обмена открытым ключом:
@@ -60,6 +86,10 @@ gpg --keyring ./vanyapubring.kbx --no-default-keyring --import petyapubkey.gpg
 8. Теперь мы можем просмотреть импортированный ключ:
 ```
 gpg --keyring ./vanyapubring.kbx --no-default-keyring --list-keys
+```
+Вывод:
+```
+uid           [ unknown] Ryan <ryan@somewhere.com>
 ```
 
 Значение [unknown] указывает, что информация о достоверности ключа недоступна. Чтобы избежать предупреждений в будущем, давайте изменим это значение на trusted:
@@ -99,6 +129,10 @@ gpg --keyring ./ryanpubring.kbx --no-default-keyring --pinentry-mode=loopback --
 13. Теперь проверим, прошла ли расшифровка успешно:
 ```
 diff -s greetings.txt ../sam/greetings.txt
+```
+Вывод, который позволяет нам понять, что все прошло успешно:
+```
+Files greetings.txt and ../sam/greetings.txt are identical
 ```
 
 ## Лабораторная работа выполнена!
